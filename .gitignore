@@ -1,0 +1,8 @@
+*.pyc
+*.noseids
+.coverage
+build/
+dist/
+MANIFEST
+
+.*.sw*
