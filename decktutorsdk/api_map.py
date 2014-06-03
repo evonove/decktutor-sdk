@@ -1,5 +1,5 @@
 
-API_MAP = {
+_API_MAP = {
 
     'current': {
 
@@ -162,3 +162,5 @@ API_MAP = {
         }
     }
 }
+
+api_map = _API_MAP
