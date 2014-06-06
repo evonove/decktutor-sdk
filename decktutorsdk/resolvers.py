@@ -5,7 +5,7 @@ from decktutorsdk.api import Api
 
 class BaseResolver(object):
     """
-    This is the very basic resolver
+    This is the basic resolver
     Does nothing
     """
 

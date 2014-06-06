@@ -24,7 +24,7 @@ class Decktutor(object):
         else:
             # Default behaviour
 
-            instance = Decktutor(status=2)
+            instance = Decktutor(api_map=api_map[name])
             setattr(self, name, instance)
             return instance
 
