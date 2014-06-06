@@ -96,17 +96,19 @@ class Api(object):
             if datetime.datetime.now() > util.parse_datetime(self.token.get("auth_token_expiration")):
                 self.token = None
 
-    def request(self, url, method, body=None, headers=None):
-        """Make HTTP call, formats response and does error handling. Uses http_call method in API class.
+    def request(self, url, method, headers=None, body=None, params=None):
+        """
+        Make HTTP call, formats response and does error handling. Uses http_call method in API class.
+        'body' param will be JSONyfied!
         Usage::
-            >>> api.request("https://api.decktutor.it/things", "GET", {})
-            >>> api.request("https://api.decktutor.it/other/things", "POST", "{}", {} )
+            >>> api.request("/things", "GET", {})
+            >>> api.request("/other/things", "POST", "{}", {} )
         """
 
         http_headers = util.merge_dict(self.headers(), headers or {})
-
+        url = self.default_endpoint()+url
         try:
-            return self.http_call(url, method, data=json.dumps(body), headers=http_headers)
+            return self.http_call(url, method, data=json.dumps(body), params=params, headers=http_headers)
 
         # Format Error message for bad request
         except exceptions.BadRequest as error:

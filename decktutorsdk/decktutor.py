@@ -1,4 +1,6 @@
 from api_map import api_map
+from decktutorsdk.resolvers import DefaultResolver
+import decktutorsdk.util as util
 
 
 class Decktutor(object):
@@ -13,8 +15,12 @@ class Decktutor(object):
 
         #'url' is intended for internal mapping use only
         if self.api_map['url']:
-            return ''
-
+            resolver_class = self.api_map['resolver']
+            if resolver_class:
+                resolver = util.load_class(resolver_class)()
+            else:
+                resolver = DefaultResolver()
+            return resolver.resolve
         else:
             # Default behaviour
 
