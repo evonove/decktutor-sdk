@@ -13,6 +13,8 @@ import decktutorsdk.util as util
 from decktutorsdk import exceptions
 from decktutorsdk.version import __version__
 
+api_map = api_map["current"]
+
 
 class Api(object):
 

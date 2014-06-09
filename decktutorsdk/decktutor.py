@@ -73,7 +73,7 @@ def set_auth_config(options=None, **config):
     Create new api object with given configuration and authentication
     """
     global __auth_api__
-    __auth_api__ = Api(options or {}, **config, authenticate=True)
+    __auth_api__ = Api(options or {}, authenticate=True, **config)
     return __auth_api__
 
 
@@ -82,7 +82,7 @@ def set_default_config(options=None, **config):
     Create new default api object with given configuration
     """
     global __auth_api__
-    __auth_api__ = Api(options or {}, **config, authenticate=False)
+    __auth_api__ = Api(options or {}, authenticate=False, **config)
     return __auth_api__
 
 
