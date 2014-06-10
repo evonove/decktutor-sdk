@@ -3,7 +3,6 @@ class BaseResolver(object):
     This is the basic resolver
     Does nothing
     """
-
     def resolve(self, api_map=None, url_entry=None):
         if api_map is None:
             raise Exception("Resolve must be called with 'api_map' argument")
@@ -24,7 +23,6 @@ class DefaultResolver(BaseResolver):
     >>>     api_map={'url':'/{id}', 'method':'POST'}, url_entry={'id':123}, body={''}, params={''}
     >>> )
     """
-
     def resolve(self, api_map=None, url_entry=None, **kwargs):
         url, method = super(DefaultResolver, self).resolve(api_map=api_map, url_entry=url_entry)
         from .decktutor import default
@@ -39,7 +37,6 @@ class AuthResolver(BaseResolver):
     >>>     api_map={'url':'/authd/{id}', 'method':'POST'}, url_entry={'id':123}, body={''}, params={''}
     >>> )
     """
-
     def resolve(self, api_map=None, url_entry=None, **kwargs):
         url, method = super(DefaultResolver, self).resolve(api_map=api_map, url_entry=url_entry)
         from .decktutor import default_auth
