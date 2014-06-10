@@ -6,12 +6,12 @@ class BaseResolver(object):
     def resolve(self, api_map=None, url_entry=None):
         if api_map is None:
             raise Exception("Resolve must be called with 'api_map' argument")
-        elif api_map['url'] is None or api_map['method']:
+        elif api_map.get('url') is None or api_map.get('method') is None:
             raise Exception("Resolve must be called with a map with 'url' and 'method'")
 
         url, method = api_map['url'], api_map['method']
         url_entry = url_entry or {}
-        url = url.format(url_entry)
+        url = url.format(**url_entry)
         return url, method
 
 
@@ -26,7 +26,7 @@ class DefaultResolver(BaseResolver):
     def resolve(self, api_map=None, url_entry=None, **kwargs):
         url, method = super(DefaultResolver, self).resolve(api_map=api_map, url_entry=url_entry)
         from .decktutor import default
-        default().request(url=url, method=method, **kwargs)
+        return default().request(url=url, method=method, **kwargs)
 
 
 class AuthResolver(BaseResolver):
@@ -38,6 +38,6 @@ class AuthResolver(BaseResolver):
     >>> )
     """
     def resolve(self, api_map=None, url_entry=None, **kwargs):
-        url, method = super(DefaultResolver, self).resolve(api_map=api_map, url_entry=url_entry)
+        url, method = super(AuthResolver, self).resolve(api_map=api_map, url_entry=url_entry)
         from .decktutor import default_auth
-        default_auth().request(url=url, method=method, **kwargs)
+        return default_auth().request(url=url, method=method, **kwargs)

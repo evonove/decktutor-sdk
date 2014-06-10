@@ -111,7 +111,7 @@ class Api(object):
         """
 
         http_headers = util.merge_dict(self.headers(), headers or {})
-        url = self.endpoint()+url
+        url = self.endpoint+url
         try:
             return self.http_call(url, method, data=json.dumps(body), params=params, headers=http_headers)
 
