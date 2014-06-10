@@ -13,7 +13,7 @@ class TestExceptions(unittest.TestCase):
         self.assertEqual(str(error), "Request failed.")
 
     def test_redirect(self):
-        error = Redirection({"Location": "http://example.com" })
+        error = Redirection({"Location": "http://example.com"})
         self.assertEqual(str(error), "Request failed. => http://example.com")
 
     def test_not_found(self):

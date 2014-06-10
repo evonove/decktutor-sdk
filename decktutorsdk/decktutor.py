@@ -5,6 +5,8 @@ from decktutorsdk.api import Api
 from decktutorsdk.resolvers import DefaultResolver
 import decktutorsdk.util as util
 
+global_map = global_map["current"]
+
 
 class Decktutor(object):
 

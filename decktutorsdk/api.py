@@ -34,10 +34,10 @@ class Api(object):
         self.authenticate = kwargs.get("authenticate", False)
         self.mode = kwargs.get("mode", "sandbox")
         self.endpoint = kwargs.get("endpoint", self.default_endpoint())
-        self.token_endpoint = kwargs.get("token_endpoint", self.default_token_endpoint())
+        self.token_endpoint = kwargs.get("token_endpoint", self.default_token_endpoint(base=self.endpoint))
         self.token = None
         self.token_request_at = None
-        self.incremental = time.time()
+        self.incremental = int(time.time())
         # setup SSL certificate verification if private certificate provided
         ssl_options = kwargs.get("ssl_options", {})
         if "cert" in ssl_options:
@@ -52,16 +52,20 @@ class Api(object):
         else:
             return api_map["api_sandbox_root"]
 
-    def default_token_endpoint(self):
+    def default_token_endpoint(self, base=None):
 
-        return api_map['api']['account']['login']['url']
+        if not base:
+            base = self.default_endpoint()
+        return base+api_map['api']['account']['login']['url']
 
     def basic_auth(self):
         """
         Find basic auth, and returns base64 encoded
         """
-        credentials = "{login:%s, password:%s}" % (self.username, self.password)
-        return base64.b64encode(credentials.encode('utf-8')).decode('utf-8')
+        credentials = '{"login":"%s", "password":"%s"}' % (self.username, self.password)
+        #base64 case
+        #return base64.b64encode(credentials.encode('utf-8')).decode('utf-8')
+        return credentials
 
     def get_token(self):
         """
@@ -80,21 +84,20 @@ class Api(object):
             data=payload,
             headers=self.headers(authenticate=False))
 
-        self.token['auth_token'] = login['auth_token']
-        self.token['auth_token_expiration'] = login['auth_token_expiration']
-        self.token['auth_token_secret'] = login['auth_token_secret']
+        self.token = login
         return self.token
 
     def sequence_number(self):
         """
         return an incremental number, dependent on timestamp getted on the api init call
         """
-        return self.incremental + 1
+        self.incremental += 1
+        return self.incremental
 
     def validate_token_hash(self):
         """Checks if token duration has expired and if so resets token
         """
-        if self.token_request_at and self.token and self.token.get("auth_token_expiration") is not None:
+        if self.token and self.token.get("auth_token_expiration") is not None:
             if datetime.datetime.now() > util.parse_datetime(self.token.get("auth_token_expiration")):
                 self.token = None
 
@@ -108,7 +111,7 @@ class Api(object):
         """
 
         http_headers = util.merge_dict(self.headers(), headers or {})
-        url = self.default_endpoint()+url
+        url = self.endpoint()+url
         try:
             return self.http_call(url, method, data=json.dumps(body), params=params, headers=http_headers)
 
