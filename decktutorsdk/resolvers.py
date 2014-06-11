@@ -1,3 +1,6 @@
+from decktutorsdk.api import api_factory
+
+
 class BaseResolver(object):
     """
     This is the basic resolver
@@ -25,8 +28,7 @@ class DefaultResolver(BaseResolver):
     """
     def resolve(self, api_map=None, url_entry=None, **kwargs):
         url, method = super(DefaultResolver, self).resolve(api_map=api_map, url_entry=url_entry)
-        from .decktutor import default
-        return default().request(url=url, method=method, **kwargs)
+        return api_factory.get(authenticate=False).request(url=url, method=method, **kwargs)
 
 
 class AuthResolver(BaseResolver):
@@ -39,5 +41,4 @@ class AuthResolver(BaseResolver):
     """
     def resolve(self, api_map=None, url_entry=None, **kwargs):
         url, method = super(AuthResolver, self).resolve(api_map=api_map, url_entry=url_entry)
-        from .decktutor import default_auth
-        return default_auth().request(url=url, method=method, **kwargs)
+        return api_factory.get(authenticate=True).request(url=url, method=method, **kwargs)

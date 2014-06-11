@@ -1,4 +1,3 @@
-import base64
 import hashlib
 import requests
 import json
@@ -14,6 +13,10 @@ from decktutorsdk import exceptions
 from decktutorsdk.version import __version__
 
 api_map = api_map["current"]
+
+var_username = "DECKTUTOR_USERNAME"
+var_password = "DECKTUTOR_PASSWORD"
+var_mode = "DECKTUTOR_MODE"
 
 
 class Api(object):
@@ -200,3 +203,51 @@ class Api(object):
                 "User-Agent": self.user_agent
             }
         return headers
+
+
+class ApiFactory(object):
+
+    """
+    Create new ApiFactory object with given configuration
+    """
+    def __init__(self):
+        self._api = None
+        self._auth_api = None
+        self._username = None
+        self._password = None
+        self._mode = None
+
+    def get(self, authenticate=False):
+        """
+        Returns the  api object and if not present creates a new one.
+        Mode var is lazy loaded by the api, if none --> 'sandbox'
+        """
+        if not self._username or not self._password:
+            try:
+
+                self._username = os.environ[var_username]
+                self._password = os.environ[var_password]
+                self._mode = os.environ.get(var_mode)
+            except KeyError:
+                raise exceptions.MissingConfig(
+                    "%s and %s not provided!" % (var_username, var_password)
+                )
+        if not authenticate:
+            if self._api is None:
+                self._api = Api(mode=self._mode, username=self._username,
+                                password=self._password, authenticate=authenticate)
+            return self._api
+
+        if self._auth_api is None:
+            self._auth_api = Api(mode=self._mode, username=self._username,
+                                 password=self._password, authenticate=authenticate)
+        return self._auth_api
+
+    def configure(self, username=None, password=None, mode=None, api=None, auth_api=None):
+        self._api = api or self._api
+        self._auth_api = auth_api or self._auth_api
+        self._username = username
+        self._password = password
+        self._mode = mode
+
+api_factory = ApiFactory()
