@@ -216,7 +216,7 @@ class ApiFactory(object):
         self._password = None
         self._mode = None
 
-    def get(self, authenticate=False):
+    def get(self, authenticate=True):
         """
         Returns the  api object and if not present creates a new one.
         Mode var is lazy loaded by the api, if none --> 'sandbox'
