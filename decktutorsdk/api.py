@@ -112,7 +112,6 @@ class Api(object):
             >>> api.request("/things", "GET", {})
             >>> api.request("/other/things", "POST", "{}", {} )
         """
-
         http_headers = util.merge_dict(self.headers(), headers or {})
         url = self.endpoint+url
         try:
@@ -244,6 +243,9 @@ class ApiFactory(object):
         return self._auth_api
 
     def configure(self, username=None, password=None, mode=None, api=None, auth_api=None):
+        """
+        Configure the api before get()
+        """
         self._api = api or self._api
         self._auth_api = auth_api or self._auth_api
         self._username = username
