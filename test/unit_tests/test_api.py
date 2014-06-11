@@ -1,8 +1,7 @@
 import unittest
 import datetime
 from mock import Mock, patch
-from decktutorsdk import decktutor
-from decktutorsdk.api import api_factory
+from decktutorsdk.api import api_factory, Api, ApiFactory
 from decktutorsdk.exceptions import ResourceNotFound, MissingConfig
 
 
@@ -10,7 +9,7 @@ class ApiTest(unittest.TestCase):
     def setUp(self):
         self.username = "test"
         self.password = "password"
-        self.api = decktutor.Api(
+        self.api = Api(
             username=self.username, password=self.password, authenticate=True
         )
         self.api.request = Mock()
@@ -23,7 +22,7 @@ class ApiTest(unittest.TestCase):
         }
         self.auth_token = "test_auth_token"
         self.auth_token_secret = "test_auth_token_secret"
-        self.api_factory = api_factory
+        self.api_factory = ApiFactory()
 
     def test_default_config(self):
 
@@ -44,23 +43,23 @@ class ApiTest(unittest.TestCase):
         self.assertNotEqual(api.token, self.auth_token)
 
     def test_endpoint(self):
-        new_api = decktutor.Api(mode="live", username="dummy", password="dummy")
+        new_api = Api(mode="live", username="dummy", password="dummy")
         self.assertEqual(new_api.endpoint, "http://dev.decktutor.com/ws-2.0/app/v2")
         self.assertEqual(new_api.token_endpoint, "http://dev.decktutor.com/ws-2.0/app/v2/account/login")
 
-        new_api = decktutor.Api(mode="sandbox", username="dummy", password="dummy")
+        new_api = Api(mode="sandbox", username="dummy", password="dummy")
         self.assertEqual(new_api.endpoint, "http://dev.decktutor.com/ws-2.0/app/v2")
         self.assertEqual(new_api.token_endpoint, "http://dev.decktutor.com/ws-2.0/app/v2/account/login")
 
-        new_api = decktutor.Api(endpoint="https://custom-endpoint.decktutor.com", username="dummy", password="dummy")
+        new_api = Api(endpoint="https://custom-endpoint.decktutor.com", username="dummy", password="dummy")
         self.assertEqual(new_api.endpoint, "https://custom-endpoint.decktutor.com")
         self.assertEqual(new_api.token_endpoint, "https://custom-endpoint.decktutor.com/account/login")
 
     def test_authenticate(self):
-        new_api = decktutor.Api(username="dummy", password="dummy")
+        new_api = Api(username="dummy", password="dummy")
         self.assertEqual(new_api.authenticate, False)
 
-        new_api = decktutor.Api(username="dummy", password="dummy", authenticate=True)
+        new_api = Api(username="dummy", password="dummy", authenticate=True)
         self.assertEqual(new_api.authenticate, True)
 
     def test_get(self):
@@ -125,7 +124,7 @@ class ApiTest(unittest.TestCase):
                                           })
         self.assertEqual(auth_token, self.auth_token)
 
-    @patch('decktutorsdk.decktutor.Api.http_call', autospec=True)
+    @patch('decktutorsdk.api.Api.http_call', autospec=True)
     def test_get_auth_secret_token(self, mock_http):
         mock_http.return_value = {
             'auth_token': self.auth_token,
