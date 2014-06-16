@@ -18,7 +18,7 @@ class ApiTest(unittest.TestCase):
             "number": "4417119669820331",
             "item_id": "11",
             "first_name": "Joy",
-            "last_name": "Deck"
+            "last_name": "Leggero"
         }
         self.auth_token = "test_auth_token"
         self.auth_token_secret = "test_auth_token_secret"

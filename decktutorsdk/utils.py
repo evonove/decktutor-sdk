@@ -131,6 +131,10 @@ End code from
 """
 
 
+def time_now():
+    return datetime.utcnow().replace(tzinfo=utc)
+
+
 def join_url(url, *paths):
     """
     Joins individual URL strings together, and returns a single string.

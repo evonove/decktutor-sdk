@@ -100,7 +100,7 @@ class Api(object):
         """
         if self.token and self.token.get("auth_token_expiration") is not None:
             date = util.parse_datetime(self.token.get("auth_token_expiration"))
-            if datetime.datetime.utcnow().replace(tzinfo=util.utc) > date:
+            if util.time_now() > date:
                 self.token = None
 
     def request(self, url, method, headers=None, body=None, params=None):
