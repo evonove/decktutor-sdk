@@ -7,7 +7,7 @@ import datetime
 import time
 from decktutorsdk.api_map import api_map
 
-import decktutorsdk.util as util
+import decktutorsdk.utils as util
 
 from decktutorsdk import exceptions
 from decktutorsdk.version import __version__
@@ -66,8 +66,6 @@ class Api(object):
         Find basic auth, and returns base64 encoded
         """
         credentials = '{"login":"%s", "password":"%s"}' % (self.username, self.password)
-        #base64 case
-        #return base64.b64encode(credentials.encode('utf-8')).decode('utf-8')
         return credentials
 
     def get_token(self):
@@ -101,7 +99,8 @@ class Api(object):
         """Checks if token duration has expired and if so resets token
         """
         if self.token and self.token.get("auth_token_expiration") is not None:
-            if datetime.datetime.now() > util.parse_datetime(self.token.get("auth_token_expiration")):
+            date = util.parse_datetime(self.token.get("auth_token_expiration"))
+            if datetime.datetime.utcnow().replace(tzinfo=util.utc) > date:
                 self.token = None
 
     def request(self, url, method, headers=None, body=None, params=None):
@@ -142,7 +141,9 @@ class Api(object):
         logging.info('Response[%d]: %s, Duration: %s.%ss.' % (
             response.status_code, response.reason, duration.seconds, duration.microseconds
         ))
-        return self.handle_response(response, response.content.decode('utf-8'))
+        #In case of content in the response is UTF-8 encoded use:
+        #>>> response.content.decode('utf-8')
+        return self.handle_response(response, response.content)
 
     def handle_response(self, response, content):
         """

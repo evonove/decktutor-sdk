@@ -1,7 +1,7 @@
 from api_map import api_map as global_map
 from decktutorsdk.exceptions import MissingConfig
 from decktutorsdk.resolvers import DefaultResolver
-import decktutorsdk.util as util
+import decktutorsdk.utils as util
 
 api_config = global_map["current"]["api"]
 

@@ -104,4 +104,3 @@ class DecktutorTest(unittest.TestCase):
         mock_request.assert_called_once_with(
             url="/things/123/url", method="POST", body="my_body", params={"param1": "param"}, headers="head"
         )
-
