@@ -1,7 +1,6 @@
 import unittest
-import datetime
 from mock import Mock, patch
-from decktutorsdk.api import api_factory, Api, ApiFactory
+from decktutorsdk.api import Api, ApiFactory
 from decktutorsdk.exceptions import ResourceNotFound, MissingConfig
 
 

@@ -5,35 +5,32 @@ import logging
 import os
 import datetime
 import time
-from decktutorsdk.api_map import api_map
 
-import decktutorsdk.utils as util
-
-from decktutorsdk import exceptions
-from decktutorsdk.version import __version__
+from . import utils
+from . import exceptions
+from .api_map import api_map
+from .version import __version__
 
 api_map = api_map["current"]
 
-var_username = "DECKTUTOR_USERNAME"
-var_password = "DECKTUTOR_PASSWORD"
-var_mode = "DECKTUTOR_MODE"
+username = "DECKTUTOR_USERNAME"
+password = "DECKTUTOR_PASSWORD"
+mode = "DECKTUTOR_MODE"
 
 
 class Api(object):
-
+    """
+    Api object for internal api authentication, exceptions handling,
+     logging and api response presentation purpose
+    """
     user_agent = "decktutor-sdk/evonove(version=%s)" % __version__
 
     def __init__(self, options=None, **kwargs):
-        """
-        Create API object
-        """
-        kwargs = util.merge_dict(options or {}, kwargs)
-
+        kwargs = utils.merge_dict(options or {}, kwargs)
         #required params
         self.username = kwargs["username"]
         self.password = kwargs["password"]
         #end required
-
         self.authenticate = kwargs.get("authenticate", False)
         self.mode = kwargs.get("mode", "sandbox")
         self.endpoint = kwargs.get("endpoint", self.default_endpoint())
@@ -49,23 +46,23 @@ class Api(object):
         self.options = kwargs
 
     def default_endpoint(self):
-
         if self.mode == "live":
             return api_map["api_root"]
         else:
             return api_map["api_sandbox_root"]
 
     def default_token_endpoint(self, base=None):
-
-        if not base:
+        if base is None:
             base = self.default_endpoint()
         return base+api_map['api']['account']['login']['url']
 
     def basic_auth(self):
         """
-        Find basic auth, and returns base64 encoded
+        Find basic auth
         """
-        credentials = '{"login":"%s", "password":"%s"}' % (self.username, self.password)
+        credentials = '{{"login":"{username}", "password":"{password}"}}'.format(
+            username=self.username, password=self.password
+        )
         return credentials
 
     def get_token(self):
@@ -96,11 +93,12 @@ class Api(object):
         return self.incremental
 
     def validate_token_hash(self):
-        """Checks if token duration has expired and if so resets token
+        """
+        Checks if token duration has expired and if so resets token
         """
         if self.token and self.token.get("auth_token_expiration") is not None:
-            date = util.parse_datetime(self.token.get("auth_token_expiration"))
-            if util.time_now() > date:
+            date = utils.parse_datetime(self.token.get("auth_token_expiration"))
+            if utils.time_now() > date:
                 self.token = None
 
     def request(self, url, method, headers=None, body=None, params=None):
@@ -111,7 +109,7 @@ class Api(object):
             >>> api.request("/things", "GET", {})
             >>> api.request("/other/things", "POST", "{}", {} )
         """
-        http_headers = util.merge_dict(self.headers(), headers or {})
+        http_headers = utils.merge_dict(self.headers(), headers or {})
         url = self.endpoint+url
         try:
             return self.http_call(url, method, data=json.dumps(body), params=params, headers=http_headers)
@@ -178,7 +176,6 @@ class Api(object):
             raise exceptions.ConnectionError(response, content, "Unknown response code: #{response.code}")
 
     def headers(self, authenticate=None):
-
         if authenticate is None:
             authenticate = self.authenticate
 
@@ -197,7 +194,6 @@ class Api(object):
             }
         else:
             headers = {
-
                 "Content-Type": "application/json",
                 "Accept": "application/json",
                 "User-Agent": self.user_agent
@@ -206,7 +202,6 @@ class Api(object):
 
 
 class ApiFactory(object):
-
     """
     Create new ApiFactory object with given configuration
     """
@@ -225,12 +220,12 @@ class ApiFactory(object):
         if not self._username or not self._password:
             try:
 
-                self._username = os.environ[var_username]
-                self._password = os.environ[var_password]
-                self._mode = os.environ.get(var_mode)
+                self._username = os.environ[username]
+                self._password = os.environ[password]
+                self._mode = os.environ.get(mode)
             except KeyError:
                 raise exceptions.MissingConfig(
-                    "%s and %s not provided!" % (var_username, var_password)
+                    "%s and %s not provided!" % (username, password)
                 )
         if not authenticate:
             if self._api is None:

@@ -1,13 +1,12 @@
-from api_map import api_map as global_map
-from decktutorsdk.exceptions import MissingConfig
-from decktutorsdk.resolvers import DefaultResolver
-import decktutorsdk.utils as util
+from .api_map import api_map as global_map
+from .exceptions import MissingConfig
+from .resolvers import DefaultResolver
+from . import utils
 
 api_config = global_map["current"]["api"]
 
 
 class Decktutor(object):
-
     """
     Simple decktutorsdk use:
     >>> decktutor.insertions.info(url_entry={'code':123}, params={'param1': 'abc', 'param2': 'def'})
@@ -20,7 +19,6 @@ class Decktutor(object):
         self.api_map = api_map
 
     def __getattr__(self, name):
-
         if name not in self.api_map:
             raise MissingConfig("No sdk configuration found in api_map module for this call: " + name)
 
@@ -41,7 +39,7 @@ class Decktutor(object):
         if resolver_class is None:
             return DefaultResolver
 
-        return util.load_class(resolver_class)
+        return utils.load_class(resolver_class)
 
     def get_resolver(self):
         resolver_class = self.get_resolver_class()

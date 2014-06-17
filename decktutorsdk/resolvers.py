@@ -1,4 +1,4 @@
-from decktutorsdk.api import api_factory
+from .api import api_factory
 
 
 class BaseResolver(object):
