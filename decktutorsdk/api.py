@@ -71,7 +71,7 @@ class Api(object):
         """
         payload = self.basic_auth()
 
-        self.validate_token_hash()
+        self._validate_token_hash()
         if self.token is not None:
             return self.token
         else:
@@ -92,7 +92,7 @@ class Api(object):
         self.incremental += 1
         return self.incremental
 
-    def validate_token_hash(self):
+    def _validate_token_hash(self):
         """
         Checks if token duration has expired and if so resets token
         """
@@ -249,3 +249,4 @@ class ApiFactory(object):
         self._mode = mode
 
 api_factory = ApiFactory()
+
