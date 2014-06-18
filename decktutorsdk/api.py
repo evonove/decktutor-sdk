@@ -182,11 +182,10 @@ class Api(object):
         if authenticate:
             token = self.get_token()
             sequence = self.sequence_number()
+            signature = ("%02d:%s" % (sequence, token['auth_token_secret'])).encode("UTF-8")
             headers = {
                 "x-dt-Auth-Token": ("%s" % token['auth_token']),
-                "x-dt-Signature": (
-                    "%s" % hashlib.md5("%02d:%s" % (sequence, token['auth_token_secret'])).hexdigest()
-                ),
+                "x-dt-Signature": ("%s" % hashlib.md5(signature).hexdigest()),
                 "x-dt-Sequence": ("%s" % sequence),
                 "Content-Type": "application/json",
                 "Accept": "application/json",
