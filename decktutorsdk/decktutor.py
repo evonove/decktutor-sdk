@@ -9,7 +9,7 @@ default_api_map = global_map["current"]["api"]
 class Decktutor(object):
     """
     Simple decktutorsdk use:
-    >>> decktutor.insertions.info(url_entry={'code':123}, params={'param1': 'abc', 'param2': 'def'})
+        decktutor.insertions.info(url_entry={'code':123}, params={'param1': 'abc', 'param2': 'def'})
     will call GET on http://dev.decktutor.com/ws-2.0/app/v2/insertions/123?param1=abc&param2=def
     """
     def __init__(self, api_map=None, **kwargs):
