@@ -11,10 +11,6 @@ from . import exceptions
 from .api_map import api_map
 from .version import __version__
 
-username = "DECKTUTOR_USERNAME"
-password = "DECKTUTOR_PASSWORD"
-mode = "DECKTUTOR_MODE"
-
 
 class Api(object):
     """
@@ -105,8 +101,8 @@ class Api(object):
         Make HTTP call, formats response and does error handling. Uses http_call method in API class.
         'body' param will be JSONyfied!
         Usage::
-            >>> api.request("/things", "GET", {})
-            >>> api.request("/other/things", "POST", "{}", {} )
+            api.request("/things", "GET", {})
+            api.request("/other/things", "POST", "{}", {} )
         """
         http_headers = utils.merge_dict(self.headers(), headers or {})
         url = self.endpoint+url
@@ -218,12 +214,13 @@ class ApiFactory(object):
         if not self._username or not self._password:
             try:
 
-                self._username = os.environ[username]
-                self._password = os.environ[password]
-                self._mode = os.environ.get(mode)
+                self._username = os.environ["DECKTUTOR_USERNAME"]
+                self._password = os.environ["DECKTUTOR_PASSWORD"]
+                self._mode = os.environ.get("DECKTUTOR_MODE")
             except KeyError:
                 raise exceptions.MissingConfig(
-                    "%s and %s not provided!" % (username, password)
+                    "You have to set DECKTUTOR_USERNAME and DECKTUTOR_PASSWORD env vars or call"
+                    "api_factory.configure() method."
                 )
         if not authenticate:
             if self._api is None:
