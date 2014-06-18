@@ -1,7 +1,6 @@
-
 import json
 import unittest
-from mock import patch
+from ..test_helper import mock
 from decktutorsdk.api import api_factory
 from decktutorsdk.decktutor import decktutor
 
@@ -13,7 +12,7 @@ class TestAccount(unittest.TestCase):
         self.api_factory = api_factory
         self.api_factory.configure(username=self.username, password=self.password)
 
-    @patch('decktutorsdk.api.Api.http_call', autospec=True)
+    @mock.patch('decktutorsdk.api.Api.http_call', autospec=True)
     def test_account_login(self, mock_response):
         auth_token = "5T23GENtqCAPbIQZnSIdLulyqSCRAyefl/nTKGLgLzBLaZKz2msjsw=="
         nick = "Joy"

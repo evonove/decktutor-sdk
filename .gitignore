@@ -7,3 +7,5 @@ MANIFEST
 
 .idea/
 .*.sw*
+
+.tox

@@ -1,5 +1,5 @@
 import unittest
-from mock import Mock, patch
+from ..test_helper import mock
 from decktutorsdk.api import Api, ApiFactory
 from decktutorsdk.exceptions import ResourceNotFound, MissingConfig
 
@@ -11,7 +11,7 @@ class ApiTest(unittest.TestCase):
         self.api = Api(
             username=self.username, password=self.password, authenticate=True
         )
-        self.api.request = Mock()
+        self.api.request = mock.Mock()
         self.order_attributes = {
             "date": "01-01-2015",
             "number": "4417119669820331",
@@ -81,7 +81,7 @@ class ApiTest(unittest.TestCase):
                                                  {})
         self.assertNotEqual(order.get('error'), None)
 
-    @patch('decktutorsdk.api.Api.http_call', autospec=True)
+    @mock.patch('decktutorsdk.api.Api.http_call', autospec=True)
     def test_expired_time(self, mock_http_call):
         old_date = '2012-12-31T11:09:45+00:00'
         token = {
@@ -93,7 +93,7 @@ class ApiTest(unittest.TestCase):
         new_token = self.api.get_token()
         self.assertNotEqual(token, new_token)
 
-    @patch('decktutorsdk.api.Api.http_call', autospec=True)
+    @mock.patch('decktutorsdk.api.Api.http_call', autospec=True)
     def test_incremental_increments(self, mock_req):
         old_incr = self.api.incremental
         self.api.headers()
@@ -107,7 +107,7 @@ class ApiTest(unittest.TestCase):
         self.assertRaises(ResourceNotFound, self.api.request, ("/payments/payment?cnt=1", "GET"))
 
     def test_get_auth_token(self):
-        with patch("decktutorsdk.api.Api.http_call", autospec=True) as mock_http:
+        with mock.patch("decktutorsdk.api.Api.http_call", autospec=True) as mock_http:
             mock_http.return_value = {
                 'auth_token': self.auth_token,
                 'auth_token_expiration': '2020-12-31T11:09:45+00:00',
@@ -124,13 +124,13 @@ class ApiTest(unittest.TestCase):
                                               })
             self.assertEqual(auth_token, self.auth_token)
 
-        with patch("decktutorsdk.api.Api.http_call", autospec=True) as mock_http:
+        with mock.patch("decktutorsdk.api.Api.http_call", autospec=True) as mock_http:
             #Here the token should be valid
             auth_token = self.api.get_token()['auth_token']
             self.assertTrue(not mock_http.called)
             self.assertEqual(auth_token, self.auth_token)
 
-    @patch('decktutorsdk.api.Api.http_call', autospec=True)
+    @mock.patch('decktutorsdk.api.Api.http_call', autospec=True)
     def test_get_auth_secret_token(self, mock_http):
         mock_http.return_value = {
             'auth_token': self.auth_token,
