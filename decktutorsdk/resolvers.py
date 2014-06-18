@@ -4,9 +4,9 @@ from decktutorsdk.exceptions import MissingParam
 
 class BaseResolver(object):
     """
-    This is the basic resolver
+    Basic resolver Mixin.
     """
-    def resolve(self, api_map=None, url_entry=None):
+    def setup(self, api_map=None, url_entry=None):
         if api_map is None:
             raise Exception("Resolve must be called with 'api_map' argument")
         elif api_map.get('url') is None or api_map.get('method') is None:
@@ -30,7 +30,7 @@ class DefaultResolver(BaseResolver):
         )
     """
     def resolve(self, api_map=None, url_entry=None, **kwargs):
-        url, method = super(DefaultResolver, self).resolve(api_map=api_map, url_entry=url_entry)
+        url, method = self.setup(api_map=api_map, url_entry=url_entry)
         return api_factory.get_instance(authenticate=False).request(url=url, method=method, **kwargs)
 
 
@@ -43,5 +43,5 @@ class AuthResolver(BaseResolver):
         )
     """
     def resolve(self, api_map=None, url_entry=None, **kwargs):
-        url, method = super(AuthResolver, self).resolve(api_map=api_map, url_entry=url_entry)
+        url, method = self.setup(api_map=api_map, url_entry=url_entry)
         return api_factory.get_instance(authenticate=True).request(url=url, method=method, **kwargs)
