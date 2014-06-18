@@ -31,7 +31,7 @@ class DefaultResolver(BaseResolver):
     """
     def resolve(self, api_map=None, url_entry=None, **kwargs):
         url, method = super(DefaultResolver, self).resolve(api_map=api_map, url_entry=url_entry)
-        return api_factory.get(authenticate=False).request(url=url, method=method, **kwargs)
+        return api_factory.get_instance(authenticate=False).request(url=url, method=method, **kwargs)
 
 
 class AuthResolver(BaseResolver):
@@ -44,4 +44,4 @@ class AuthResolver(BaseResolver):
     """
     def resolve(self, api_map=None, url_entry=None, **kwargs):
         url, method = super(AuthResolver, self).resolve(api_map=api_map, url_entry=url_entry)
-        return api_factory.get(authenticate=True).request(url=url, method=method, **kwargs)
+        return api_factory.get_instance(authenticate=True).request(url=url, method=method, **kwargs)

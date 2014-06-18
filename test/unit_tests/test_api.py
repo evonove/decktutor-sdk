@@ -26,16 +26,16 @@ class ApiTest(unittest.TestCase):
     def test_default_config(self):
 
         with self.assertRaises(MissingConfig):
-            self.api_factory.get()
+            self.api_factory.get_instance()
         self.api_factory.configure(username=self.username, password=self.password)
-        api = self.api_factory.get(authenticate=True)
+        api = self.api_factory.get_instance(authenticate=True)
         self.assertEqual(api.password, self.password)
         self.assertEqual(api.username, self.username)
         self.assertTrue(api.authenticate)
         api.token = self.auth_token
         #the configuration is lazy loaded, this api instance is not authenticated so it loads the new config
         self.api_factory.configure(username="another_username", password="another_password", )
-        api = self.api_factory.get(authenticate=False)
+        api = self.api_factory.get_instance(authenticate=False)
         self.assertEqual(api.password, "another_password")
         self.assertEqual(api.username, "another_username")
         self.assertTrue(not api.authenticate)
