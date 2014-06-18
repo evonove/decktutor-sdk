@@ -3,14 +3,14 @@ from .exceptions import MissingConfig
 from .resolvers import DefaultResolver
 from . import utils
 
-api_config = global_map["current"]["api"]
+default_api_map = global_map["current"]["api"]
 
 
 class Decktutor(object):
     """
     Simple decktutorsdk use:
     >>> decktutor.insertions.info(url_entry={'code':123}, params={'param1': 'abc', 'param2': 'def'})
-    will call   GET   on   http://dev.decktutor.com/ws-2.0/app/v2/insertions/123?param1=abc&param2=def
+    will call GET on http://dev.decktutor.com/ws-2.0/app/v2/insertions/123?param1=abc&param2=def
     """
     def __init__(self, api_map=None, **kwargs):
         """
@@ -20,10 +20,11 @@ class Decktutor(object):
 
     def __getattr__(self, name):
         if name not in self.api_map:
-            raise MissingConfig("No sdk configuration found in api_map module for this call: " + name)
+            raise MissingConfig("No sdk configuration found in api_map module for this call: " +
+                                name)
 
-        # Default behaviour
         instance = Decktutor(api_map=self.api_map[name])
+        # Cache the instance for current name
         setattr(self, name, instance)
         return instance
 
@@ -46,4 +47,4 @@ class Decktutor(object):
         return resolver_class()
 
 
-decktutor = Decktutor(api_map=api_config)
+decktutor = Decktutor(api_map=default_api_map)
