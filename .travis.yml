@@ -6,7 +6,6 @@ python: "2.7"
 env:
   - TOX_ENV=py27
   - TOX_ENV=py34
-  - TRAVIS_BRANCH=beta
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
