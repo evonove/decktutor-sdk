@@ -11,8 +11,6 @@ from . import exceptions
 from .api_map import api_map
 from .version import __version__
 
-api_map = api_map["current"]
-
 username = "DECKTUTOR_USERNAME"
 password = "DECKTUTOR_PASSWORD"
 mode = "DECKTUTOR_MODE"
@@ -30,7 +28,8 @@ class Api(object):
         #required params
         self.username = kwargs["username"]
         self.password = kwargs["password"]
-        #end required
+
+        self.api_map = api_map["current"]
         self.authenticate = kwargs.get("authenticate", False)
         self.mode = kwargs.get("mode", "sandbox")
         self.endpoint = kwargs.get("endpoint", self.default_endpoint())
@@ -47,14 +46,14 @@ class Api(object):
 
     def default_endpoint(self):
         if self.mode == "live":
-            return api_map["api_root"]
+            return self.api_map["api_root"]
         else:
-            return api_map["api_sandbox_root"]
+            return self.api_map["api_sandbox_root"]
 
     def default_token_endpoint(self, base=None):
         if base is None:
             base = self.default_endpoint()
-        return base+api_map['api']['account']['login']['url']
+        return base + self.api_map['api']['account']['login']['url']
 
     def basic_auth(self):
         """
