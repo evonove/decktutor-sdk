@@ -5,7 +5,6 @@ from decktutorsdk.exceptions import MissingParam
 class BaseResolver(object):
     """
     This is the basic resolver
-    Does nothing
     """
     def resolve(self, api_map=None, url_entry=None):
         if api_map is None:
@@ -26,9 +25,9 @@ class DefaultResolver(BaseResolver):
     """
     Default resolver
     example Usage::
-    >>> resolve(
-    >>>     api_map={'url':'/{id}', 'method':'POST'}, url_entry={'id':123}, body={''}, params={''}
-    >>> )
+        resolve(
+            api_map={'url':'/{id}', 'method':'POST'}, url_entry={'id':123}, body={''}, params={''}
+        )
     """
     def resolve(self, api_map=None, url_entry=None, **kwargs):
         url, method = super(DefaultResolver, self).resolve(api_map=api_map, url_entry=url_entry)
@@ -39,9 +38,9 @@ class AuthResolver(BaseResolver):
     """
     Auth resolver
     example Usage::
-    >>> resolve(
-    >>>     api_map={'url':'/authd/{id}', 'method':'POST'}, url_entry={'id':123}, body={''}, params={''}
-    >>> )
+        resolve(
+            api_map={'url':'/authd/{id}', 'method':'POST'}, url_entry={'id':123}, body={''}, params={''}
+        )
     """
     def resolve(self, api_map=None, url_entry=None, **kwargs):
         url, method = super(AuthResolver, self).resolve(api_map=api_map, url_entry=url_entry)
