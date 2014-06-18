@@ -1,4 +1,5 @@
 from .api import api_factory
+from decktutorsdk.exceptions import MissingParam
 
 
 class BaseResolver(object):
@@ -14,7 +15,10 @@ class BaseResolver(object):
 
         url, method = api_map['url'], api_map['method']
         url_entry = url_entry or {}
-        url = url.format(**url_entry)
+        try:
+            url = url.format(**url_entry)
+        except KeyError as ke:
+            raise MissingParam("Missing url sdk parameter: '%s'" % ke.message)
         return url, method
 
 
