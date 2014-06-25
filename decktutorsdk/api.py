@@ -31,6 +31,7 @@ class Api(object):
         self.endpoint = kwargs.get("endpoint", self.default_endpoint())
         self.token_endpoint = kwargs.get("token_endpoint", self.default_token_endpoint(base=self.endpoint))
         self.token = None
+        self.page_size = self.default_page_size()
         self.token_request_at = None
         self.incremental = int(time.time())
         # setup SSL certificate verification if private certificate provided
@@ -50,6 +51,12 @@ class Api(object):
         if base is None:
             base = self.default_endpoint()
         return base + self.api_map['api']['account']['login']['url']
+
+    def default_page_size(self):
+        """
+        Return the default configured pagesize or the default for decktutor api
+        """
+        return self.api_map['api_page_size'] or 100
 
     def basic_auth(self):
         """
@@ -96,7 +103,7 @@ class Api(object):
             if utils.time_now() > date:
                 self.token = None
 
-    def request(self, url, method, headers=None, body=None, params=None):
+    def request(self, url, method, page_size=None, page=None, headers=None, body=None, params=None):
         """
         Make HTTP call, formats response and does error handling. Uses http_call method in API class.
         'body' param will be JSONyfied!
@@ -105,6 +112,7 @@ class Api(object):
             api.request("/other/things", "POST", "{}", {} )
         """
         http_headers = utils.merge_dict(self.headers(), headers or {})
+        params = utils.merge_dict(self.pagination_params(page, page_size), params or {})
         url = self.endpoint+url
         try:
             return self.http_call(url, method, data=json.dumps(body), params=params, headers=http_headers)
@@ -169,6 +177,23 @@ class Api(object):
             raise exceptions.ServerError(response, content)
         else:
             raise exceptions.ConnectionError(response, content, "Unknown response code: #{response.code}")
+
+    def pagination_params(self, page=None, page_size=None):
+        """
+        Pages start from page 0 to +
+        """
+        if page is None:
+            return {}
+
+        if page_size is None:
+            page_size = self.page_size
+        page_size = int(page_size)
+        offset = int(page) * page_size
+        limit = offset + page_size - 1
+        return {
+            'offset': offset,
+            'limit': limit
+        }
 
     def headers(self, authenticate=None):
         if authenticate is None:

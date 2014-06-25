@@ -73,7 +73,7 @@ class DecktutorTest(unittest.TestCase):
         decktutor.insertions.info(url_entry={'code': 123})
 
         mock_request.assert_called_once_with(
-            url="/insertions/123/", method="GET"
+            url="/insertions/123/", method="GET", page=None, page_size=None
         )
 
     @mock.patch("decktutorsdk.api.Api.request")
@@ -83,7 +83,17 @@ class DecktutorTest(unittest.TestCase):
         decktutor.insertions.info(url_entry={'code': 456}, params={'param1': 'abc'})
 
         mock_request.assert_called_once_with(
-            url="/insertions/456/", method="GET", params={'param1': 'abc'}
+            url="/insertions/456/", method="GET", page=None, page_size=None, params={'param1': 'abc'}
+        )
+
+    @mock.patch("decktutorsdk.api.Api.request")
+    def test_request_get_invocation_with_pagination(self, mock_request):
+
+        decktutor = Decktutor(api_map=self.test_api_map)
+        decktutor.insertions.info(url_entry={'code': 456}, params={'param1': 'abc'}, page=3, page_size=50)
+
+        mock_request.assert_called_once_with(
+            url="/insertions/456/", method="GET", page=3, page_size=50, params={'param1': 'abc'}
         )
 
     @mock.patch("decktutorsdk.api.Api.request")
@@ -93,7 +103,17 @@ class DecktutorTest(unittest.TestCase):
         decktutor.another.request(url_entry={'id': 123})
 
         mock_request.assert_called_once_with(
-            url="/things/123/url", method="POST"
+            url="/things/123/url", page=None, page_size=None, method="POST"
+        )
+
+    @mock.patch("decktutorsdk.api.Api.request")
+    def test_request_post_invocation_with_pagination(self, mock_request):
+
+        decktutor = Decktutor(api_map=self.test_api_map_post)
+        decktutor.another.request(url_entry={'id': 123}, page=2)
+
+        mock_request.assert_called_once_with(
+            url="/things/123/url", page=2, page_size=None, method="POST"
         )
 
     @mock.patch("decktutorsdk.api.Api.request")
@@ -103,5 +123,5 @@ class DecktutorTest(unittest.TestCase):
         decktutor.another.request(url_entry={'id': 123}, body="my_body", params={"param1": "param"}, headers="head")
 
         mock_request.assert_called_once_with(
-            url="/things/123/url", method="POST", body="my_body", params={"param1": "param"}, headers="head"
+            url="/things/123/url", method="POST", body="my_body", page=None, page_size=None, params={"param1": "param"}, headers="head"
         )

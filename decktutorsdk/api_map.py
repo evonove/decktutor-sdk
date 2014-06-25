@@ -7,6 +7,7 @@ _API_MAP = {
         'api_version': 'v2-2.0.0',
         'api_root': 'http://dev.decktutor.com/ws-2.0/app/v2',
         'api_sandbox_root': 'http://dev.decktutor.com/ws-2.0/app/v2',
+        'api_page_size': 100,
         'api': {
 
             'account': {
@@ -119,7 +120,7 @@ _API_MAP = {
                     'url': '/search/set/{game}/{code}/categories',
                     'description': 'List available categories for a particular expansion set',
                     'method': 'GET',
-                    'resolver': 'decktutorsdk.resolvers.AuthResolver',
+                    'resolver': 'decktutorsdk.resolvers.AuthResolver'
                 },
                 'list_filters': {
                     'url': '/search/category/{code}/filters',

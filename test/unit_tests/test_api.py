@@ -8,6 +8,7 @@ class ApiTest(unittest.TestCase):
     def setUp(self):
         self.username = "test"
         self.password = "password"
+        self.endpoint = "http://dev.decktutor.com/ws-2.0/app/v2"
         self.api = Api(
             username=self.username, password=self.password, authenticate=True
         )
@@ -147,3 +148,27 @@ class ApiTest(unittest.TestCase):
                                               "User-Agent": self.api.user_agent
                                           })
         self.assertEqual(auth_token_secret, self.auth_token_secret)
+
+    @mock.patch('decktutorsdk.api.Api.headers')
+    @mock.patch('decktutorsdk.api.Api.http_call')
+    def test_pagination_params(self, mock_http, mock_headers):
+
+        mock_headers.return_value = {}
+        url = "/endpoint"
+        method = 'POST'
+        api = Api(
+            username=self.username, password=self.password, authenticate=True, endpoint=self.endpoint
+        )
+        api.request(url, method, 50, 1, {}, {}, {})
+        mock_http.assert_called_once_with(self.endpoint+url, method, headers={},
+                                          data='{}', params={
+                                              'offset': 50,
+                                              'limit': 99
+                                          })
+
+        api.request(url, method, 50, None, {}, {}, {})
+        mock_http.assert_called_with(self.endpoint+url, method, headers={}, data='{}', params={})
+
+        api.request(url, method, None, 0, {}, {}, {})
+        mock_http.assert_called_with(self.endpoint+url, method, headers={}, data='{}', params={
+            'offset': 0, 'limit': 99})
