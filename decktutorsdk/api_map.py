@@ -23,6 +23,18 @@ _API_MAP = {
             },
             'handlings': {
 
+                'search': {
+                    'url': '/handlings/search/seller',
+                    'description': 'Search and list handlings based on role and filters',
+                    'method': 'POST',
+                    'resolver': 'decktutorsdk.resolvers.AuthResolver'
+                },
+                'report': {
+                    'url': '/handlings/{code}/report',
+                    'description': 'Fetch the report data for an handling',
+                    'method': 'GET',
+                    'resolver': 'decktutorsdk.resolvers.AuthResolver',
+                }
             },
             'insertions': {
 
