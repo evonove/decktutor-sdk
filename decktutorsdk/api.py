@@ -103,7 +103,7 @@ class Api(object):
             if utils.time_now() > date:
                 self.token = None
 
-    def request(self, url, method, page_size=None, page=None, headers=None, body=None, params=None):
+    def request(self, url, method, page_size=None, page=None, headers=None, body=None, params=None, print_file=False):
         """
         Make HTTP call, formats response and does error handling. Uses http_call method in API class.
         'body' param will be JSONyfied!
@@ -115,7 +115,13 @@ class Api(object):
         params = utils.merge_dict(self.pagination_params(page, page_size), params or {})
         url = self.endpoint+url
         try:
-            return self.http_call(url, method, data=json.dumps(body), params=params, headers=http_headers)
+            response = self.http_call(
+                url, method, data=json.dumps(body), params=params, headers=http_headers
+            )
+            if print_file:
+                self.write_response_file(response, url)
+
+            return response
 
         # Format Error message for bad request
         except exceptions.BadRequest as error:
@@ -145,6 +151,13 @@ class Api(object):
         #In case of content in the response is UTF-8 encoded use:
         #>>> response.content.decode('utf-8')
         return self.handle_response(response, response.content)
+
+    def write_response_file(self, json_res, title):
+        fname = '{}_{:%Y%m%d%H%M%S}_.xml'.format(title, time.timezone.now())
+        fname = os.path.join(os.path.dirname(os.path.realpath(__file__)), fname)
+        with open(fname, 'a') as ofile:
+            text = json.dumps(json_res, indent=4, sort_keys=True)
+            ofile.write(text.encode("utf-8"))
 
     def handle_response(self, response, content):
         """
