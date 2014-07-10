@@ -153,9 +153,9 @@ class Api(object):
         return self.handle_response(response, response.content)
 
     def write_response_file(self, json_res, title):
-        fname = '{}_{:%Y%m%d%H%M%S}_.xml'.format(title, time.timezone.now())
+        fname = '{}_{:%Y%m%d%H%M%S}_.xml'.format(title.split("/")[-1], datetime.datetime.now())
         fname = os.path.join(os.path.dirname(os.path.realpath(__file__)), fname)
-        with open(fname, 'a') as ofile:
+        with open(fname, 'w') as ofile:
             text = json.dumps(json_res, indent=4, sort_keys=True)
             ofile.write(text.encode("utf-8"))
 
