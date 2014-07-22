@@ -103,7 +103,7 @@ class Api(object):
             if utils.time_now() > date:
                 self.token = None
 
-    def request(self, url, method, page_size=None, page=None, headers=None, body=None, params=None, print_file=False):
+    def request(self, url, method, page_size=None, page=None, headers=None, body=None, params=None):
         """
         Make HTTP call, formats response and does error handling. Uses http_call method in API class.
         'body' param will be JSONyfied!
@@ -118,7 +118,7 @@ class Api(object):
             response = self.http_call(
                 url, method, data=json.dumps(body), params=params, headers=http_headers
             )
-            if print_file:
+            if self.mode == "sandbox":
                 self.write_response_file(response, url)
 
             return response
