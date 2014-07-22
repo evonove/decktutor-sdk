@@ -35,7 +35,7 @@ class ApiTest(unittest.TestCase):
         self.assertTrue(api.authenticate)
         api.token = self.auth_token
         #the configuration is lazy loaded, this api instance is not authenticated so it loads the new config
-        self.api_factory.configure(username="another_username", password="another_password", )
+        self.api_factory.configure(username="another_username", password="another_password")
         api = self.api_factory.get_instance(authenticate=False)
         self.assertEqual(api.password, "another_password")
         self.assertEqual(api.username, "another_username")
@@ -157,7 +157,7 @@ class ApiTest(unittest.TestCase):
         url = "/endpoint"
         method = 'POST'
         api = Api(
-            username=self.username, password=self.password, authenticate=True, endpoint=self.endpoint
+            username=self.username, password=self.password, authenticate=True, endpoint=self.endpoint, mode="live"
         )
         api.request(url, method, 50, 1, {}, {}, {})
         mock_http.assert_called_once_with(self.endpoint+url, method, headers={},
