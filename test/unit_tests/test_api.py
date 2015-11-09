@@ -44,8 +44,8 @@ class ApiTest(unittest.TestCase):
 
     def test_endpoint(self):
         new_api = Api(mode="live", username="dummy", password="dummy")
-        self.assertEqual(new_api.endpoint, "http://dev.decktutor.com/ws-2.0/app/v2")
-        self.assertEqual(new_api.token_endpoint, "http://dev.decktutor.com/ws-2.0/app/v2/account/login")
+        self.assertEqual(new_api.endpoint, "http://ws.decktutor.com/app/v2")
+        self.assertEqual(new_api.token_endpoint, "http://ws.decktutor.com/app/v2/account/login")
 
         new_api = Api(mode="sandbox", username="dummy", password="dummy")
         self.assertEqual(new_api.endpoint, "http://dev.decktutor.com/ws-2.0/app/v2")
