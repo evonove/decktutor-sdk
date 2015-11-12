@@ -34,7 +34,7 @@ _API_MAP = {
                     'description': 'Fetch the report data for an handling',
                     'method': 'GET',
                     'resolver': 'decktutorsdk.resolvers.AuthResolver',
-                }
+                },
                 'steps': {
                     'paid': {
                         'url': 'handlings/{code}/step/paid',
