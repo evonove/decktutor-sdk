@@ -37,19 +37,19 @@ _API_MAP = {
                 },
                 'steps': {
                     'paid': {
-                        'url': 'handlings/{code}/step/paid',
+                        'url': '/handlings/{code}/step/paid',
                         'description': 'Mark an handling in state new as paid',
                         'method': 'POST',
                         'resolver': 'decktutorsdk.resolvers.AuthResolver',
                     },
                     'unpaid': {
-                        'url': 'handlings/{code}/step/unpaid',
+                        'url': '/handlings/{code}/step/unpaid',
                         'description': 'Mark an handling in state new as unpaid',
                         'method': 'POST',
                         'resolver': 'decktutorsdk.resolvers.AuthResolver',
                     },
                     'shipped': {
-                        'url': 'handlings/{code}/step/shipped',
+                        'url': '/handlings/{code}/step/shipped',
                         'description': 'Mark an handling in state paid as shipped',
                         'method': 'POST',
                         'resolver': 'decktutorsdk.resolvers.AuthResolver',
