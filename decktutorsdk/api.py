@@ -150,14 +150,14 @@ class Api(object):
         ))
         #In case of content in the response is UTF-8 encoded use:
         #>>> response.content.decode('utf-8')
-        return self.handle_response(response, response.content)
+        return self.handle_response(response, response.content.decode('utf-8'))
 
     def write_response_file(self, json_res, title):
         fname = '{}_{:%Y%m%d%H%M%S}_.xml'.format(title.split("/")[-1], datetime.datetime.now())
         fname = os.path.join(os.path.dirname(os.path.realpath(__file__)), fname)
         with open(fname, 'w') as ofile:
             text = json.dumps(json_res, indent=4, sort_keys=True)
-            ofile.write(text.encode("utf-8"))
+            ofile.write(text)
 
     def handle_response(self, response, content):
         """
