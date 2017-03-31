@@ -70,6 +70,12 @@ _API_MAP = {
                     'method': 'GET',
                     'resolver': 'decktutorsdk.resolvers.AuthResolver',
                 },
+                'info_own': {
+                    'url': '/insertions/{code}/own',
+                    'description': 'Retrieve basic information about an insertion of the authenticated user',
+                    'method': 'GET',
+                    'resolver': 'decktutorsdk.resolvers.AuthResolver',
+                },
                 'page': {
                     'url': '/insertions/{code}/page',
                     'description': 'Retrieve all the information for an insertion',
@@ -139,6 +145,14 @@ _API_MAP = {
                     'method': 'GET',
                     'resolver': 'decktutorsdk.resolvers.AuthResolver',
                 },
+            },
+            'products': {
+                'info': {
+                    'url': '/products/{code}',
+                    'description': 'Retrieve a specific product by its unique code',
+                    'method': 'GET',
+                    'resolver': 'decktutorsdk.resolvers.AuthResolver',
+                }
             },
             'search': {
 
