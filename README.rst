@@ -1,8 +1,8 @@
 DeckTutor Python SDK
 --------------------
 
-.. image:: https://travis-ci.org/evonove/django-stored-messages.png?branch=master
-        :target: https://travis-ci.org/evonove/django-stored-messages
+.. image:: https://travis-ci.org/evonove/decktutor-sdk.svg?branch=master
+    :target: https://travis-ci.org/evonove/decktutor-sdk
 
 Simple usage::
 
