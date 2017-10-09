@@ -5,8 +5,8 @@ _API_MAP = {
 
         'version': '1.0',
         'api_version': 'v2-2.0.0',
-        'api_root': 'http://ws.decktutor.com/app/v2',
-        'api_sandbox_root': 'http://ws.sandbox.decktutor.com/app/v2',
+        'api_root': 'https://ws.decktutor.com/app/v2',
+        'api_sandbox_root': 'https://ws.sandbox.decktutor.com/app/v2',
         'api_page_size': 100,
         'api': {
 

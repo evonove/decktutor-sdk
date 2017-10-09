@@ -8,7 +8,7 @@ class ApiTest(unittest.TestCase):
     def setUp(self):
         self.username = "test"
         self.password = "password"
-        self.endpoint = "http://ws.sandbox.decktutor.com/app/v2"
+        self.endpoint = "https://ws.sandbox.decktutor.com/app/v2"
         self.api = Api(
             username=self.username, password=self.password, authenticate=True
         )
@@ -44,12 +44,12 @@ class ApiTest(unittest.TestCase):
 
     def test_endpoint(self):
         new_api = Api(mode="live", username="dummy", password="dummy")
-        self.assertEqual(new_api.endpoint, "http://ws.decktutor.com/app/v2")
-        self.assertEqual(new_api.token_endpoint, "http://ws.decktutor.com/app/v2/account/login")
+        self.assertEqual(new_api.endpoint, "https://ws.decktutor.com/app/v2")
+        self.assertEqual(new_api.token_endpoint, "https://ws.decktutor.com/app/v2/account/login")
 
         new_api = Api(mode="sandbox", username="dummy", password="dummy")
-        self.assertEqual(new_api.endpoint, "http://ws.sandbox.decktutor.com/app/v2")
-        self.assertEqual(new_api.token_endpoint, "http://ws.sandbox.decktutor.com/app/v2/account/login")
+        self.assertEqual(new_api.endpoint, "https://ws.sandbox.decktutor.com/app/v2")
+        self.assertEqual(new_api.token_endpoint, "https://ws.sandbox.decktutor.com/app/v2/account/login")
 
         new_api = Api(endpoint="https://custom-endpoint.decktutor.com", username="dummy", password="dummy")
         self.assertEqual(new_api.endpoint, "https://custom-endpoint.decktutor.com")
@@ -116,7 +116,7 @@ class ApiTest(unittest.TestCase):
             }
             auth_token = self.api.get_token()['auth_token']
             mock_http.assert_called_once_with(self.api,
-                                              'http://ws.sandbox.decktutor.com/app/v2/account/login', 'POST',
+                                              'https://ws.sandbox.decktutor.com/app/v2/account/login', 'POST',
                                               data='{"login":"%s", "password":"%s"}' % (self.username, self.password),
                                               headers={
                                                   "Content-Type": "application/json",
@@ -140,7 +140,7 @@ class ApiTest(unittest.TestCase):
         }
         auth_token_secret = self.api.get_token()['auth_token_secret']
         mock_http.assert_called_once_with(self.api,
-                                          'http://ws.sandbox.decktutor.com/app/v2/account/login', 'POST',
+                                          'https://ws.sandbox.decktutor.com/app/v2/account/login', 'POST',
                                           data='{"login":"%s", "password":"%s"}' % (self.username, self.password),
                                           headers={
                                               "Content-Type": "application/json",
