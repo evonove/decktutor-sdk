@@ -2,7 +2,7 @@
 #!/usr/bin/env python
 
 import sys, os
-from distutils.core import setup
+from setuptools import setup
 from decktutorsdk.version import __version__
 
 version = __version__
